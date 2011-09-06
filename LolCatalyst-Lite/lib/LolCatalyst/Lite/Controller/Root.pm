@@ -42,13 +42,40 @@ sub default :Path {
     $c->response->status(404);
 }
 
+=head2 translate
+
+Translate to LOLCAT
+
+=cut
+
+sub translate :Local {
+  my ($self, $c) = @_;
+  my $lol = $c->req->body_params->{lol}; # only for a POST request
+  # $c->req->params->{lol} would catch GET or POST
+  # $c->req->query_params would catch GET params only
+  $c->stash(
+    lol => $lol,
+    result => $c->model('Translate')->translate($lol),
+    template => 'index.tt',
+  );
+}
+
+
 =head2 end
 
 Attempt to render a view, if needed.
 
 =cut
 
-sub end : ActionClass('RenderView') {}
+sub end : ActionClass('RenderView') {
+  my ($self, $c) = @_;
+  my $errors = scalar @{$c->error};
+  if ($errors) {
+    $c->res->status(500);
+    $c->res->body('internal server error');
+    $c->clear_errors;
+  }
+}
 
 =head1 AUTHOR
 
