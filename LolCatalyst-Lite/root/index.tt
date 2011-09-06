@@ -1,0 +1,5 @@
+[% WRAPPER page.tt title = c.config.name ; END %]
+<form name="translate" method=POST action="translate">
+  <input type="text" name="lol" value="" title="enter text to translate">
+  <input type="submit" value="Translate">
+</form>
