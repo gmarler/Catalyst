@@ -17,6 +17,10 @@ requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
+requires 'Acme::LOLCAT';
+requires 'Catalyst::View::TT';
+requires 'Catalyst::View::JSON';
+requires 'Catalyst::Plugin::Unicode';
 
 test_requires 'Test::More' => '0.88';
 catalyst;
