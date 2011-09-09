@@ -26,4 +26,6 @@ it under the same terms as Perl itself.
 
 =cut
 
+__PACKAGE__->config({ expose_stash => [ qw/lol result/ ] });
+
 1;
