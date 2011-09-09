@@ -20,10 +20,11 @@ if !$ENV{APP_TEST};
 
 # GET request
 my $request = GET('http://localhost');
+$request->headers->authorization_basic('fred', 'wilma');
 my $response;
 ok( $response = request($request), 'Basic request to start page');
-ok($response->is_success, 'Start page request successful 2xx' );
-is($response->content_type, 'text/html', "HTML Content-Type" );
+ok( $response->is_success, 'Start page request successful 2xx' );
+is( $response->content_type, 'text/html', "HTML Content-Type" );
 like( $response->content, qr/Translate/, "Contains the word Translate");
 
 # test request to translate
@@ -34,6 +35,7 @@ $request = POST(
     'lol' => 'Can I have a cheese burger?',
   ]
 );
+$request->headers->authorization_basic('fred', 'wilma');
 
 $response = undef;
 ok( $response = request($request), 'Request to return translation');
@@ -43,7 +45,7 @@ like( $response->content, qr/CHEEZ/, "Contains a correct translation snippet" );
 
 # test request to translate_service
 SKIP: {
-  skip "Set APP_TEST fro the tests to run fully",
+  skip "Set APP_TEST for the tests to run fully",
     4 if !$ENV{APP_TEST};
 
   $request = POST(
