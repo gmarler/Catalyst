@@ -62,6 +62,7 @@ sub translate : Local {
 
 sub translate_service : Local {
   my ($self,$c) = @_;
+  $c->authenticate;
   $c->forward('translate');
   $c->stash->{current_view} = 'Service';
 }
