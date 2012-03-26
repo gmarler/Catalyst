@@ -67,6 +67,33 @@ sub create :Chained('base') :PathPart('create') :Args(1) {
 
 }
 
+=head2 form_create_do
+
+Take information from form and add to database
+
+=cut
+
+sub form_create_do :Chained('base') :PathPart('form_create_do') :Args(0) {
+  my ($self, $c) = @_;
+
+  # Retrieve the values from the form
+  my $hostname     = $c->request->params->{hostname}     || 'N/A';
+
+  # Create the book
+  my $host = $c->model('DB::Hosts')->create({
+          hostname   => $hostname,
+      });
+
+  # Handle relationship with author
+  #$book->add_to_book_authors({author_id => $author_id});
+  # Note: Above is a shortcut for this:
+  # $book->create_related('book_authors', {author_id => $author_id});
+
+  # Store new model object in stash and set template
+  $c->stash(host     => $host,
+            template => 'hosts/create_done.tt2');
+}
+
 =head1 AUTHOR
 
 Gordon Marler

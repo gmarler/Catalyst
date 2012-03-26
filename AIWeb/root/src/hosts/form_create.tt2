@@ -1,0 +1,8 @@
+[% META title = 'Manual Form Host Create' -%]
+
+<form method="post" action="[% c.uri_for('form_create_do') %]">
+<table>
+  <tr><td>Hostname:</td><td><input type="text" name="hostname"></td></tr>
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>
