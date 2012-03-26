@@ -8,6 +8,10 @@ __PACKAGE__->config(
     # Altered the default TT extension to .tt2
     TEMPLATE_EXTENSION => '.tt2',
     render_die => 1,
+  # Set to 1 for detailed timer stats in your HTML as comments
+  TIMER        => 1,
+  # This is your wrapper template located in 'root/src'
+  WRAPPER      => 'wrapper.tt2',
 );
 
 =head1 NAME
