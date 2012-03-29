@@ -32,9 +32,11 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('host_id');
 
 __PACKAGE__->has_one(
-  'osrel',
-  'AIWeb::Schema::Result::OSRels',
-  { "foreign.fk_host_id" => "self.host_id" },
+  'host_osrel' => 'AIWeb::Schema::Result::Host_OSRel',
+  'host_id'
+);
+__PACKAGE__->many_to_many(
+  'osrel' => 'host_osrel', 'osrel_id'
 );
 
 __PACKAGE__->has_one(
