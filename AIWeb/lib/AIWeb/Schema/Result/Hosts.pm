@@ -23,6 +23,7 @@ __PACKAGE__->add_columns(
   },
   last_modified => {
     data_type         => "DATETIME",
+    timezone          => "US/Eastern",
     is_nullable       => 0,
     set_on_create     => 1,
     set_on_update     => 1,
