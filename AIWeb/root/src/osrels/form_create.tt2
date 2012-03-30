@@ -1,0 +1,10 @@
+[% META title = 'Manual Form OS Release Create' -%]
+ 
+<form method="post" action="[% c.uri_for('form_create_do') %]">
+<table>
+  <tr><td>OS Release Name:</td><td><input type="text" name="description"></td></tr>
+  <tr><td>OS Release Version:</td><td><input type="text" name="entire_version"></td></tr>
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>
+
