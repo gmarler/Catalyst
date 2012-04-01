@@ -1,0 +1,26 @@
+[% # This is a TT comment. -%]
+ 
+[%- # Provide a title -%]
+[% META title = 'OS Release List' -%]
+ 
+[% # Note That the '-' at the beginning or end of TT code  -%]  
+[% # "chomps" the whitespace/newline at that end of the    -%]  
+[% # output (use View Source in browser to see the effect) -%]
+ 
+[% # Some basic HTML with a loop to display books -%]
+<table>
+<tr><th>OS Release</th><th>Version of "entire" Package</th><th>Links</th></tr>
+[% # Display each OS Release in a table row %]
+[% FOREACH osrel IN osrels -%]
+  <tr> 
+    <td>[% osrel.description %]</td>
+    <td>[% osrel.entire_version %]</td>
+    <td> 
+      [% # Add a link to delete an OS Release entry %]
+      <a href="[%
+        c.uri_for(c.controller.action_for('delete'), [osrel.id]) %]">Delete</a>
+    </td>
+  </tr>
+[% END -%]
+</table>
+

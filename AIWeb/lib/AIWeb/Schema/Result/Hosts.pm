@@ -11,8 +11,11 @@ extends 'DBIx::Class';
 __PACKAGE__->load_components(qw/InflateColumn::DateTime TimeStamp Core/);
 __PACKAGE__->table('hosts');
 
-#my $formatter = DateTime::Format::Strptime->new(pattern => '%Y-%m-%d %H:%M:%S');
-my $formatter = DateTime::Format::Strptime->new(pattern => '%H:%M:%S');
+my $formatter = DateTime::Format::Strptime->new(
+   pattern     => '%D %H:%M:%S',
+   time_zone   => 'America/New_York',
+   locale      => 'en_US',
+);
 
 __PACKAGE__->add_columns(
   host_id => {
@@ -29,7 +32,8 @@ __PACKAGE__->add_columns(
   },
   last_modified => {
     data_type         => "datetime",
-    timezone          => "US/Eastern",
+    timezone          => "America/New_York",
+    locale            => "en_US",
     is_nullable       => 0,
     set_on_create     => 1,
     set_on_update     => 1,
@@ -44,6 +48,7 @@ __PACKAGE__->inflate_column( 'last_modified',
 
       return $dt;
     },
+    deflate => sub { return shift; },
   }
 );
 
