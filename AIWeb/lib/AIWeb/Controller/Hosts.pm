@@ -60,6 +60,14 @@ Display form to collect information for host to create
 sub form_create :Chained('base') :PathPart('form_create') :Args(0) {
   my ($self, $c) = @_;
 
+  # Get the list of OS Releases to display in the form for selection
+  $c->stash(osrels =>
+    [ $c->model('DB::OSRels')->search(
+        undef,  # We want everything
+        { order_by => { -asc => [ qw/entire_version/ ] } }
+      ) 
+    ] );
+
   # Set the TT template to use
   $c->stash(template => 'hosts/form_create.tt2');
 }

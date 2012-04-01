@@ -46,7 +46,12 @@ sub base :Chained('/') :PathPart('osrels') :CaptureArgs(0) {
 sub list :Chained('base') :PathPart('list') :Args(0) {
   my ($self, $c) = @_;
 
-  $c->stash(osrels => [ $c->model('DB::OSRels')->all() ] );
+  $c->stash(osrels =>
+    [ $c->model('DB::OSRels')->search(
+        undef,  # We want everything
+        { order_by => { -asc => [ qw/entire_version/ ] } }
+      ) 
+    ] );
 
   $c->stash(template => 'osrels/list.tt2' );
 }
