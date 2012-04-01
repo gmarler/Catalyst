@@ -1,5 +1,8 @@
 package AIWeb::Schema::Result::Hosts;
 
+use DateTime::Format::Strptime;
+use DateTime::Format::SQLite;
+
 use Moose;
 use namespace::clean -except => 'meta';
 
@@ -7,6 +10,9 @@ extends 'DBIx::Class';
 
 __PACKAGE__->load_components(qw/InflateColumn::DateTime TimeStamp Core/);
 __PACKAGE__->table('hosts');
+
+#my $formatter = DateTime::Format::Strptime->new(pattern => '%Y-%m-%d %H:%M:%S');
+my $formatter = DateTime::Format::Strptime->new(pattern => '%H:%M:%S');
 
 __PACKAGE__->add_columns(
   host_id => {
@@ -22,12 +28,23 @@ __PACKAGE__->add_columns(
     size              => 255,
   },
   last_modified => {
-    data_type         => "DATETIME",
+    data_type         => "datetime",
     timezone          => "US/Eastern",
     is_nullable       => 0,
     set_on_create     => 1,
     set_on_update     => 1,
   },
+);
+
+__PACKAGE__->inflate_column( 'last_modified',
+  {
+    inflate => sub {
+      my $dt = DateTime::Format::SQLite->parse_datetime( shift );
+      $dt->set_formatter( $formatter );
+
+      return $dt;
+    },
+  }
 );
 
 __PACKAGE__->set_primary_key('host_id');

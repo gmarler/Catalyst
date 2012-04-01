@@ -43,6 +43,14 @@ sub base :Chained('/') :PathPart('hosts') :CaptureArgs(0) {
   $c->log->debug('*** INSIDE BASE METHOD ***');
 }
 
+sub list :Chained('base') :PathPart('list') :Args(0) {
+  my ($self, $c) = @_;
+
+  $c->stash(hosts => [ $c->model('DB::Hosts')->all() ] );
+
+  $c->stash(template => 'hosts/list.tt2' );
+}
+
 =head2 form_create
 
 Display form to collect information for host to create
