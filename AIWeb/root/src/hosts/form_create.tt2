@@ -5,9 +5,9 @@
   <tr><td>Hostname:</td><td><input type="text" name="hostname"></td></tr>
   <tr><td><label>OS Release:</label></td>
     <td>
-      <select>
+      <select name="osrel_id">
       [% FOREACH osrel IN osrels -%]
-        <option value="[% osrel.entire_version %]">[% osrel.description -%]
+        <option value="[% osrel.osrel_id %]">[% osrel.description -%]
         </option>
       [% END -%]
       </select>

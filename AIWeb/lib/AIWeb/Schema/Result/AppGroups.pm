@@ -21,20 +21,17 @@ __PACKAGE__->add_columns(
     size              => "255",
     is_nullable       => 0,
   },
-  fk_host_id => {
-    data_type         => "INT",
-    size              => 11,
-    is_nullable       => 0,
-    extra             => { unsigned => 1},
-  },
 );
 
 __PACKAGE__->set_primary_key('appgroup_id');
 
-__PACKAGE__->belongs_to(
-  'hosts',
-  'AIWeb::Schema::Result::Hosts',
-  { 'foreign.host_id' => 'self.fk_host_id' },
+__PACKAGE__->has_many(
+  'host_appgroup' => 'AIWeb::Schema::Result::Host_AppGroup',
+  'appgroup_id'
+);
+
+__PACKAGE__->many_to_many(
+  'hosts' => 'host_appgroup', 'host_id'
 );
 
 1;

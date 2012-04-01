@@ -1,4 +1,4 @@
-package AIWeb::Controller::Hosts;
+package AIWeb::Controller::AppGroups;
 use Moose;
 use namespace::autoclean;
 
@@ -6,7 +6,7 @@ BEGIN {extends 'Catalyst::Controller'; }
 
 =head1 NAME
 
-AIWeb::Controller::Hosts - Catalyst Controller
+AIWeb::Controller::AppGroups - Catalyst Controller
 
 =head1 DESCRIPTION
 
@@ -24,7 +24,7 @@ Catalyst Controller.
 #sub index :Path :Args(0) {
 #    my ( $self, $c ) = @_;
 #
-#    $c->response->body('Matched AIWeb::Controller::Hosts in Hosts.');
+#    $c->response->body('Matched AIWeb::Controller::AppGroups in AppGroups.');
 #}
 
 =head2 base
@@ -33,11 +33,11 @@ Can place common logic to start chained dispatch here
 
 =cut
 
-sub base :Chained('/') :PathPart('hosts') :CaptureArgs(0) {
+sub base :Chained('/') :PathPart('appgroups') :CaptureArgs(0) {
   my ($self, $c) = @_;
 
   # Store the ResultSet in stash so it's available for other methods
-  $c->stash(resultset => $c->model('DB::Hosts'));
+  $c->stash(resultset => $c->model('DB::AppGroups'));
 
   # Print a message to the debug log
   $c->log->debug('*** INSIDE BASE METHOD ***');
@@ -46,39 +46,36 @@ sub base :Chained('/') :PathPart('hosts') :CaptureArgs(0) {
 sub list :Chained('base') :PathPart('list') :Args(0) {
   my ($self, $c) = @_;
 
-  $c->stash(hosts => [ $c->model('DB::Hosts')->all() ] );
+  $c->stash(appgroups =>
+    [ $c->model('DB::AppGroups')->search(
+        undef,  # We want everything
+        { order_by => { -asc => [ qw/name/ ] } }
+      ) 
+    ] );
 
-  $c->stash(template => 'hosts/list.tt2' );
+  $c->stash(template => 'appgroups/list.tt2' );
 }
 
 =head2 form_create
 
-Display form to collect information for host to create
+Display form to collect information for App Group to create
 
 =cut
 
 sub form_create :Chained('base') :PathPart('form_create') :Args(0) {
   my ($self, $c) = @_;
 
-  # Get the list of OS Releases to display in the form for selection
-  $c->stash(osrels =>
-    [ $c->model('DB::OSRels')->search(
-        undef,  # We want everything
-        { order_by => { -asc => [ qw/entire_version/ ] } }
-      ) 
-    ] );
-
   # Set the TT template to use
-  $c->stash(template => 'hosts/form_create.tt2');
+  $c->stash(template => 'appgroups/form_create.tt2');
 }
 
-sub create :Chained('base') :PathPart('create') :Args(1) {
+sub create :Chained('base') :PathPart('create') :Args(2) {
   # In addition to self & context, get the hostname
   # args from the URL.  Note that Catalyst automatically
   # puts the first 1 arguments worth of extra information after the 
   # "/<controller_name>/<action_name/" into @_ because we specified
   # "Args(1)".  The args are separated by the '/' char on the URL.
-  my ($self, $c, $hostname) = @_;
+  my ($self, $c, $description, $entire_version) = @_;
 
 
 }
@@ -93,24 +90,21 @@ sub form_create_do :Chained('base') :PathPart('form_create_do') :Args(0) {
   my ($self, $c) = @_;
 
   # Retrieve the values from the form
-  my $hostname     = $c->request->params->{hostname}     || 'N/A';
-  my $osrel_id     = $c->request->params->{osrel_id}     || 'N/A';
+  my $appgrp_name      = $c->request->params->{name}     || 'N/A';
 
   # Create the book
-  my $host = $c->model('DB::Hosts')->create({
-          hostname   => $hostname,
+  my $appgroup = $c->model('DB::AppGroups')->create({
+          name      => $appgrp_name,
       });
 
   # Handle relationship with author
   #$book->add_to_book_authors({author_id => $author_id});
   # Note: Above is a shortcut for this:
   # $book->create_related('book_authors', {author_id => $author_id});
-  #$host->add_to_host_osrel({ osrel_id => $osrel_id });
-  $host->create_related('host_osrel', { osrel_id => $osrel_id });
 
   # Store new model object in stash and set template
-  $c->stash(host     => $host,
-            template => 'hosts/create_done.tt2');
+  $c->stash(appgroup     => $appgroup,
+            template => 'appgroups/create_done.tt2');
 }
 
 =head1 AUTHOR

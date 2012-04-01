@@ -1,0 +1,25 @@
+[% # This is a TT comment. -%]
+ 
+[%- # Provide a title -%]
+[% META title = 'Bloomberg App Group List' -%]
+ 
+[% # Note That the '-' at the beginning or end of TT code  -%]  
+[% # "chomps" the whitespace/newline at that end of the    -%]  
+[% # output (use View Source in browser to see the effect) -%]
+ 
+[% # Some basic HTML with a loop to display App Groups -%]
+<table>
+<tr><th>Application Group Name</th><th>Links</th></tr>
+[% # Display each App Group in a table row %]
+[% FOREACH appgroup IN appgroups -%]
+  <tr> 
+    <td>[% appgroup.name %]</td>
+    <td> 
+      [% # Add a link to delete an App Group entry %]
+      <a href="[%
+        c.uri_for(c.controller.action_for('delete'), [appgroup.id]) %]">Delete</a>
+    </td>
+  </tr>
+[% END -%]
+</table>
+
