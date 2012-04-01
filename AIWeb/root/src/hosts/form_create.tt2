@@ -13,6 +13,16 @@
       </select>
     </td>
   </tr>
+  <tr><td><label>Application Group:</label></td>
+    <td>
+      <select name="appgroup_id">
+      [% FOREACH appgroup IN appgroups -%]
+        <option value="[% appgroup.appgroup_id %]">[% appgroup.name -%]
+        </option>
+      [% END -%]
+      </select>
+    </td>
+  </tr>
 </table>
 <input type="submit" name="Submit" value="Submit">
 </form>

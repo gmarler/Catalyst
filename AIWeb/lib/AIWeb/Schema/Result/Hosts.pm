@@ -63,9 +63,11 @@ __PACKAGE__->many_to_many(
 );
 
 __PACKAGE__->has_one(
-  'appgroup',
-  'AIWeb::Schema::Result::AppGroups',
-  { "foreign.fk_host_id" => "self.host_id" },
+  'host_appgroup'   => 'AIWeb::Schema::Result::Host_AppGroup',
+  'host_id',
+);
+__PACKAGE__->many_to_many(
+  'appgroup' => 'host_appgroup', 'appgroup_id'
 );
 
 #__PACKAGE__->has_many(

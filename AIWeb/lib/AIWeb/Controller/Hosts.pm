@@ -68,6 +68,14 @@ sub form_create :Chained('base') :PathPart('form_create') :Args(0) {
       ) 
     ] );
 
+  # Get the list of AppGroups to display in the form for selection
+  $c->stash(appgroups =>
+    [ $c->model('DB::AppGroups')->search(
+        undef,  # We want everything
+        { order_by => { -asc => [ qw/name/ ] } }
+      ) 
+    ] );
+
   # Set the TT template to use
   $c->stash(template => 'hosts/form_create.tt2');
 }
@@ -95,6 +103,7 @@ sub form_create_do :Chained('base') :PathPart('form_create_do') :Args(0) {
   # Retrieve the values from the form
   my $hostname     = $c->request->params->{hostname}     || 'N/A';
   my $osrel_id     = $c->request->params->{osrel_id}     || 'N/A';
+  my $appgroup_id  = $c->request->params->{appgroup_id}  || 'N/A';
 
   # Create the book
   my $host = $c->model('DB::Hosts')->create({
@@ -106,7 +115,8 @@ sub form_create_do :Chained('base') :PathPart('form_create_do') :Args(0) {
   # Note: Above is a shortcut for this:
   # $book->create_related('book_authors', {author_id => $author_id});
   #$host->add_to_host_osrel({ osrel_id => $osrel_id });
-  $host->create_related('host_osrel', { osrel_id => $osrel_id });
+  $host->create_related('host_osrel',    { osrel_id    => $osrel_id });
+  $host->create_related('host_appgroup', { appgroup_id => $appgroup_id });
 
   # Store new model object in stash and set template
   $c->stash(host     => $host,
